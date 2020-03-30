@@ -1,6 +1,7 @@
 ###
 using BenchmarkTools
 using CuArrays
+using Flux
 
 f(m, x) = m(x)
 
@@ -34,10 +35,10 @@ cdims = Flux.NNlib.DenseConvDims(x,x)
 @edit Flux.conv!(x, m.W, x,cdims)
 
 ###
-x = rand(Float32, in, batchsize)
-m = CachedDense(in, out; batchsize=batchsize)
+x = rand(Float32, in, batchsize) |> gpu
+m = CachedDense(in, out; batchsize=batchsize)  |> gpu
 θ = params(m)
-mf = Dense(copy(m.W), copy(m.b))
+mf = Dense(copy(m.W), copy(m.b)) |> gpu
 θf = params(mf)
 
 mf(x) == m(x)

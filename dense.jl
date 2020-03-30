@@ -64,7 +64,7 @@ ZygoteRules.@adjoint function cached_dense(x::AbstractVecOrMat, W::AbstractVecOr
       @. W̄x̄⁺b̄ = ȳ * σ′(Wx⁺b)
       mul!(x̄, W', W̄x̄⁺b̄)
       mul!(W̄, W̄x̄⁺b̄, x')
-      sum!(b̄, W̄x̄⁺b̄)
+      sum!(reshape(b̄, Val(2)), W̄x̄⁺b̄)
       return x̄, W̄, b̄, nothing
    end
    y, cached_dense_adjoint
