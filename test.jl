@@ -1,3 +1,4 @@
+###
 using BenchmarkTools
 using CuArrays
 
@@ -31,3 +32,22 @@ CuArrays.@time f(mf, x);
 
 cdims = Flux.NNlib.DenseConvDims(x,x)
 @edit Flux.conv!(x, m.W, x,cdims)
+
+###
+x = rand(Float32, in, batchsize)
+m = CachedDense(in, out; batchsize=batchsize)
+θ = params(m)
+mf = Dense(copy(m.W), copy(m.b))
+θf = params(mf)
+
+mf(x) == m(x)
+
+gs = gradient(θ) do
+   sum(m(x))
+end
+gsf = gradient(θf) do
+   sum(mf(x))
+end
+
+gsf[mf.W] == gs[m.W]
+gsf[mf.b] == gs[m.b]
