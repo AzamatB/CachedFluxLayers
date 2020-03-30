@@ -1,5 +1,4 @@
 using LinearAlgebra
-using Flux
 
 import Flux
 import ZygoteRules
